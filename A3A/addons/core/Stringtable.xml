@@ -3919,6 +3919,9 @@
         <Polish>Obiekt %1 zakłóca nasze operacje w okolicy. Udaj się tam i zdobądź go przed %2.</Polish>
         <Czech>%1 narušuje naše operace v této oblasti. Jděte tam a zaberte to před %2.</Czech>
       </Key>
+      <Key ID="STR_A3A_fn_mission_conq_outp_text3">
+        <Original>An enemy garrison here is disturbing our operations in the area. Go there and secure the area before %1.</Original>
+      </Key>
       <Key ID="STR_A3A_fn_mission_conq_outp_titel1">
         <Original>Resource Acquisition</Original>
         <Italian>Acquisizione di risorse</Italian>
@@ -3935,6 +3938,12 @@
         <Polish>Przejmij posterunek</Polish>
         <Czech>Zabrat základnu</Czech>
         <Chinesesimp>夺取哨站</Chinesesimp>
+      </Key>
+      <Key ID="STR_A3A_fn_mission_conq_outp_titel3">
+        <Original>Destroy Roadblock</Original>
+      </Key>
+      <Key ID="STR_A3A_fn_mission_conq_outp_titel4">
+        <Original>Tactial Acquisition</Original>
       </Key>
       <Key ID="STR_A3A_fn_mission_conv_ammo_text">
         <Original>A convoy from %1 is about to depart at %2. It will provide ammunition to %3. Try to intercept it. Steal or destroy that truck before it reaches its destination.</Original>
