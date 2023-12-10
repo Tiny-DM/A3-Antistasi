@@ -1280,7 +1280,7 @@
         <Chinesesimp>你无法在附近存在敌人的情况下购买武器</Chinesesimp>
       </Key>
       <Key ID="STR_A3A_fn_base_garrisonInfo_stats">
-        <Original>Garrison units: %1%15<br/><br/>Squad Leaders: %2<br/>%14: %3<br/>Riflemen: %4<br/>Autoriflemen: %5<br/>Medics: %6<br/>Grenadiers: %7<br/>Marksmen: %8<br/>AT Men: %9<br/>AT Missile Men: %10<br />AA Missile Men: %11<br />Other: %12<br/>Static Weap: %13</Original>
+        <Original>Garrison units: %1%15<br/><br/>Squad Leaders: %2<br/>%14: %3<br/>Riflemen: %4<br/>Autoriflemen: %5<br/>Medics: %6<br/>Grenadiers: %7<br/>Marksmen: %8<br/>AT Men: %9<br/>AT Missile Men: %10<br />AA Missile Men: %11<br />Other: %12<br/>Static Weap: %13</Original>f
       </Key>
       <Key ID="STR_A3A_fn_base_gc_deleted">
         <Original>Garbage Deleted.&lt;br/&gt;Last GC was %1 ago.</Original>
@@ -3943,7 +3943,7 @@
         <Original>Destroy Roadblock</Original>
       </Key>
       <Key ID="STR_A3A_fn_mission_conq_outp_titel4">
-        <Original>Tactial Acquisition</Original>
+        <Original>Secure the Area</Original>
       </Key>
       <Key ID="STR_A3A_fn_mission_conv_ammo_text">
         <Original>A convoy from %1 is about to depart at %2. It will provide ammunition to %3. Try to intercept it. Steal or destroy that truck before it reaches its destination.</Original>
