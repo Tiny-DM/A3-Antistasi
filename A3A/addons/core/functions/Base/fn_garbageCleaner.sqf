@@ -27,6 +27,8 @@ sleep 0.5;
 { deleteVehicle _x } forEach (allMissionObjects "Leaflet_05_F");				// Drone drop leaflets
 { deleteVehicle _x } forEach (allMissionObjects "Ejection_Seat_Base_F");		// All vanilla ejection seats
 
+// hi
+
 // Cleanup rebel vehicles
 {
 	// Locked check is a hack for roadblock vehicles
