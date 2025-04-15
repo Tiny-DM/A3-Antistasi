@@ -148,7 +148,7 @@ switch (_mode) do
         };
 
         _infoLabel ctrlSetText format [localize "STR_antistasi_dialogs_setup_infoPanel_header",_shortName];
-        private _requiredAddons = getArray(_path/"requiredAddons") + getArray(_path/"forceDLC") - ["ws","vn","gm","spe"]; // CDLCs are listed twice for forced DLC and dependency
+        private _requiredAddons = getArray(_path/"requiredAddons") + getArray(_path/"forceDLC") - ["ws","vn","gm","spe","csla","ef","rf"]; // CDLCs are listed twice for forced DLC and dependency
         private _prettyAddonHM = createHashMapFromArray [ // TODO: Do we want to trim down the dependencies list? CUP Vehicles has dependencies on CUP Units and CUP Vehicles
             ["Weapons_1_F_lxWS", "Western Sahara CDLC"]
             ,["vn_weapons", "S.O.G Prairie Fire CDLC"]
@@ -170,6 +170,9 @@ switch (_mode) do
             ,["Swedish_Forces_Pack","Swedish Forces Pack"]
             ,["cwr3_core","Cold War Rearmed 3"]
             ,["WW2_SPEX_Assets_c_Characters_Americans_c","SPEX - Spearhead Extended"]
+            ,["EF_Data","Expeditionary Forces CDLC"]
+            ,["A3_Aegis_Weapons_F_Aegis","Arma 3 Aegis"]
+            ,["CSLA_UI","CSLA Iron Curtain CDLC"]
         ];
 
         private _prettyAddons = _requiredAddons apply 
