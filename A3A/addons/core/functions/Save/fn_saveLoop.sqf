@@ -177,11 +177,14 @@ _rebMarkers append outpostsFIA; _rebMarkers pushBack "Synd_HQ";
 
 ["staticsX", _arrayEst] call A3A_fnc_setStatVariable;
 
-[] call A3A_fnc_arsenalManage;
+[] call A3A_fnc_arsenalManage; // TODO OPF
 
 _jna_dataList = [];
 _jna_dataList = _jna_dataList + jna_dataList;
 ["jna_dataList", _jna_dataList] call A3A_fnc_setStatVariable;
+_jna_dataList_OPF = [];
+_jna_dataList = _jna_dataList_OPF + jna_dataList_OPF;
+["jna_dataList_OPF", _jna_dataList_OPF] call A3A_fnc_setStatVariable;
 
 _prestigeOPFOR = [];
 _prestigeBLUFOR = [];

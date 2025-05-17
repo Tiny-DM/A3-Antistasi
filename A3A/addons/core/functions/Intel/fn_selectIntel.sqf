@@ -202,7 +202,7 @@ if (_intelType == "Large") then
         {
             private _notYetUnlocked = allWeapons - unlockedWeapons - allMissileLaunchers; // to prevent guided launchers from being unlocked by large intel
             _newWeapon = selectRandom _notYetUnlocked;
-            [_newWeapon] remoteExec ["A3A_fnc_unlockEquipment", 2];
+            [_newWeapon] remoteExec ["A3A_fnc_unlockEquipment", 2]; // TODO OPF
 
             private _weaponName = getText (configFile >> "CfgWeapons" >> _newWeapon >> "displayName");
             _text = format [localize "STR_A3A_fn_intel_select_weap_1", _weaponName];

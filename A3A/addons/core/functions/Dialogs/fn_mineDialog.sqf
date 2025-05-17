@@ -29,7 +29,7 @@ if (_typeX == "delete") exitWith
 
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
 
-_pool = jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT;
+_pool = (["jna_datalist"] call A3A_fnc_copf)select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT;
 _quantity = 0;
 _quantityMax = 40;
 _typeM =FactionGet(reb,"mineAPERS");

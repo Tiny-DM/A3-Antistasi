@@ -14,14 +14,14 @@
 **/
 #include "..\..\script_component.hpp"
 FIX_LINE_NUMBERS()
-params ["_className", ["_noPublish", false], ["_dontAddToArsenal", false]];
+params ["_className", ["_noPublish", false], ["_dontAddToArsenal", false],["_side", ""]];
 
 private _categories = _className call A3A_fnc_equipmentClassToCategories;
 
 if (!_dontAddToArsenal) then {
 	//Add the equipment to the arsenal.
 	private _arsenalTab = _className call jn_fnc_arsenal_itemType;
-	[_arsenalTab,_className,-1] call jn_fnc_arsenal_addItem;
+	[_arsenalTab,_className,-1,_side] call jn_fnc_arsenal_addItem;
 	if (!isNil "serverInitDone") then {ServerDebug_1("Item unlocked: %1", _className)};
 };
 

@@ -13,7 +13,8 @@ Environment:
 FIX_LINE_NUMBERS()
 if (!isServer) exitWith { Error("Server-only function miscalled") };
 Info("Started updating A3A_rebelGear");
-
+params [["_player",""]];
+private _jna_datalist = (["jna_datalist",_player] call A3A_fnc_copf);
 // Base weight mappings, MIN->0, MAX->1
 #define ITEM_MIN 10
 #define ITEM_MAX 40
@@ -57,19 +58,19 @@ private _handgun = [];
         if ("SMGs" in _categories) exitWith { [_smg, _class, _amount] call _fnc_addItem };
         if ("Shotguns" in _categories) exitWith { [_shotgun, _class, _amount] call _fnc_addItem };
     };
-} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON);
 
 {
     _x params ["_class", "_amount"];
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
 
     if ("Handguns" in _categories) then { [_handgun, _class, _amount] call _fnc_addItem };
-} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_HANDGUN);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_HANDGUN);
 
 if (count A3A_specialGrenadeLaunchers > 0) then {
     // muzzle + base grenade launchers, broken down in the arsenal
-    private _rifleHM = createHashMapFromArray (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON);
-    private _muzzleHM = createHashMapFromArray (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE);
+    private _rifleHM = createHashMapFromArray (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON);
+    private _muzzleHM = createHashMapFromArray (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE);
     {
         private _weapCount = _rifleHM getOrDefault [_y#0, 0];
         if (_weapCount >= 0 and _weapCount < 2*ITEM_MIN) then { continue };        // slightly hacky but whatever
@@ -102,7 +103,7 @@ private _mlaunchersAA = [];
         if ("AA" in _categories) exitWith { [_mlaunchersAA, _class, _amount] call _fnc_addItemNoUnlocks };
         if ("AT" in _categories) exitWith { [_mlaunchersAT, _class, _amount] call _fnc_addItemNoUnlocks };
     };
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON);
 
 _rebelGear set ["RocketLaunchers", _rlaunchers];
 _rebelGear set ["MissileLaunchersAT", _mlaunchersAT];
@@ -126,7 +127,7 @@ private _uvests = [];
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
     private _array = [_uvests, _avests] select ("ArmoredVests" in _categories);
     [_array, _class, _amount] call _fnc_addItem;
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_VEST);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_VEST);
 
 [_avests, 1] call _fnc_addEmptyEntry;
 _rebelGear set ["ArmoredVests", _avests];
@@ -140,7 +141,7 @@ private _uheadgear = [];
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
     private _array = [_uheadgear, _aheadgear] select ("ArmoredHeadgear" in _categories);
     [_array, _class, _amount] call _fnc_addItem;
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_HEADGEAR);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_HEADGEAR);
 
 [_aheadgear, 1] call _fnc_addEmptyEntry;
 _rebelGear set ["ArmoredHeadgear", _aheadgear];
@@ -154,7 +155,7 @@ private _bpLoads = createHashMap;
     private _load = getNumber (configFile >> "CfgVehicles" >> _class >> "maximumLoad");
     _bpLoads set [_class, _load];
     if (_load > 160) then { [_backpacks, _class, _amount] call _fnc_addItem };
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_BACKPACK);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_BACKPACK);
 
 if (_backpacks isEqualTo []) then {
     // If we don't have any high-load backpacks (eg FFF), resort to largest one
@@ -172,13 +173,13 @@ private _nvgs = ["", 0.5];          // blank entry for phase-in
     _x params ["_class", "_amount"];
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
     if !("NVGThermal" in _categories) then { [_nvgs, _class, _amount] call _fnc_addItem };
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_NVGS);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_NVGS);
 
 _rebelGear set ["NVGs", _nvgs];
 
 // Unfiltered stuff (just radios atm? could add GPS)
 private _radios = [];
-{ [_radios, _x#0, _x#1] call _fnc_addItem } forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_RADIO);
+{ [_radios, _x#0, _x#1] call _fnc_addItem } forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_RADIO);
 _rebelGear set ["Radios", _radios];
 
 // Misc items. Don't really need weighting but whatever
@@ -193,7 +194,7 @@ private _medikits = [];
         if ("Toolkits" in _categories) exitWith { [_toolkits, _class, _amount] call _fnc_addItem };
         if ("Medikits" in _categories) exitWith { [_medikits, _class, _amount] call _fnc_addItem };
     };
-} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC);
 
 _rebelGear set ["MineDetectors", _minedetectors];
 _rebelGear set ["Toolkits", _toolkits];
@@ -209,7 +210,7 @@ private _nades = [];
         if ("SmokeGrenades" in _categories) exitWith { [_smokes, _class, _amount] call _fnc_addItem };
         if ("Grenades" in _categories) exitWith { [_nades, _class, _amount] call _fnc_addItem };
     };
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW);
 
 _rebelGear set ["SmokeGrenades", _smokes];
 _rebelGear set ["Grenades", _nades];
@@ -220,7 +221,7 @@ private _charges = [];
     _x params ["_class", "_amount"];
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
     if ("ExplosiveCharges" in _categories) then { [_charges, _class, _amount] call _fnc_addItemNoUnlocks };
-} forEach (jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT);
 
 _rebelGear set ["ExplosiveCharges", _charges];
 
@@ -241,7 +242,7 @@ private _midCount = 0;
         if ("OpticsClose" in _categories) exitWith { _opticClose pushBack _class };
         if ("OpticsLong" in _categories) exitWith { _opticLong pushBack _class };
     };
-} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC);
 
 // Mix in some short-range optics if mid-range count is low
 if (_midCount < ITEM_MAX*2) then {
@@ -269,7 +270,7 @@ private _lights = [];
     if (_amount > 0 and {minWeaps > 0 or _amount < ITEM_MIN}) then { continue };
     private _categories = _class call A3A_fnc_equipmentClassToCategories;
     if ("LightAttachments" in _categories) then { _lights pushBack _class };
-} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMACC);
+} forEach (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMACC);
 
 _rebelGear set ["LightAttachments", _lights];
 

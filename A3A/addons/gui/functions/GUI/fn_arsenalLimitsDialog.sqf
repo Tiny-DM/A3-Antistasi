@@ -34,11 +34,12 @@ switch (_mode) do
         if (!isServer) then {
             // Go fetch a fresh copy of the arsenal data
             jna_datalist = nil;
-            [clientOwner, "jna_datalist"] remoteExecCall ["publicVariableClient", 2];
+            private _reqDatalist = (["jna_datalist","",false] call A3A_fnc_copf); // return string
+            [clientOwner, _reqDatalist] remoteExecCall ["publicVariableClient", 2];
             private _timeout = time + 10;
-            waitUntil { sleep 0.1; !isNil "jna_datalist" or time > _timeout };
+            waitUntil { sleep 0.1; !isNil "jna_datalist" or !isNil "jna_datalist_OPF" or time > _timeout };
         };
-        if (isNil "jna_datalist") exitWith { closeDialog 0 };
+        if (isNil "jna_datalist" && isNil "jna_datalist_OPF") exitWith { closeDialog 0 };
 
         if !(player call A3A_fnc_isMember) then {
             [localize "STR_antistasi_arsenal_limits_dialog_hint_title", localize "STR_antistasi_arsenal_limits_dialog_guest_warning"] call A3A_fnc_customHint;
@@ -60,6 +61,7 @@ switch (_mode) do
         };
 
         { ctrlDelete _x } forEach allControls _listBox;
+        private _jna_datalist = (["jna_datalist"] call A3A_fnc_copf);
         {
             _x params ["_class", "_count"];
             private _itemName = getText (_cfgCat / _class / "displayName");
@@ -96,7 +98,7 @@ switch (_mode) do
                 _button ctrlAddEventHandler ["ButtonClick", { ["listButton", _this] call A3A_GUI_fnc_arsenalLimitsDialog }];
             } forEach [["R", "R", 66], ["-", -5, 70], ["+", 5, 82], ["U", "U", 86]];
 
-        } forEach (jna_datalist#_typeIndex select {_x#1>0});        // only show non-unlocked items
+        } forEach (_jna_datalist#_typeIndex select {_x#1>0});        // only show non-unlocked items
 
         // color-invert the selected button, restore the others
         {
@@ -135,10 +137,11 @@ switch (_mode) do
     {
         if (isNil {_display getVariable "typeIndex"}) exitWith {};
         private _typeIndex = _display getVariable "typeIndex";
+        private _jna_datalist = (["jna_datalist"] call A3A_fnc_copf);
 
         {
             A3A_arsenalLimits deleteAt (_x#0);
-        } forEach (jna_datalist#_typeIndex);
+        } forEach (_jna_datalist#_typeIndex);
 
         ["typeSelect", [_typeIndex + A3A_IDC_ARSLIMTYPESBASE]] call A3A_GUI_fnc_arsenalLimitsDialog;          // refresh the display
     };

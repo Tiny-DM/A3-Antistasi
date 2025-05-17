@@ -37,6 +37,8 @@ clearItemCargoGlobal _object;
 clearweaponCargoGlobal _object;
 clearbackpackCargoGlobal _object;
 // Update datalist on server and client
+private _reqSide = ["OPF","IND"] select (_object isEqualTo boxX);
+_array pushBack _reqSide;
 _array call jn_fnc_arsenal_addItem;
 
 //updated unlocked weapons

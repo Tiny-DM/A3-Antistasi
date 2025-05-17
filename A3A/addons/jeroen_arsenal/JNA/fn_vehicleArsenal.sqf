@@ -359,6 +359,8 @@ switch _mode do {
 		_isSelectedLeft = _index in [IDCS_LEFT];
 		_listSelected = [IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG,IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL] select _isSelectedLeft;
 
+		private _jna_datalist = (["jna_datalist"] call A3A_fnc_copf);
+
 		_inventory = if(_index == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG) then {
 
 			// Find compatible magazines for all primary weapons in vehicle
@@ -389,7 +391,7 @@ switch _mode do {
 				if !(toLower (_x select 0) in _usableMagazines) then { continue };
 				_magsArsenal pushBack _x;
 				_magsVehicle pushBack [_x select 0, 0];
-			} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
+			} forEach (_jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
 			
 			// Then add compatible mags from the vehicle cargo
 			{
@@ -403,7 +405,7 @@ switch _mode do {
 			_magsArsenal;
 		}
 		else {
-			private _items = jna_dataList select _index;
+			private _items = _jna_dataList select _index;
 			// Add entries from vehicle with zero count
 			{
 				_items = [_items, [_x select 0, 0]] call jn_fnc_arsenal_addToArray;
@@ -834,6 +836,7 @@ switch _mode do {
 
 		jnva_loadout_mass = 0;
 		diag_log jnva_loadout;
+		jnva_loadout pushBack player;
         jnva_loadout remoteExecCall ["jn_fnc_arsenal_addItem",2];
        	jnva_loadout = ((vehicle player) call jn_fnc_arsenal_cargoToArray);
        	diag_log jnva_loadout;

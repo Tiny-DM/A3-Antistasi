@@ -31,7 +31,7 @@ private _specialVarLoads = [
     "prestigeCSAT","posHQ","hr","armas","items","backpcks","ammunition","dateX","prestigeOPFOR",
     "prestigeBLUFOR","resourcesFIA","skillFIA","destroyedSites",
     "garrison","tasks","membersX","vehInGarage","destroyedBuildings","idlebases",
-    "chopForest","weather","killZones","jna_dataList","mrkCSAT","nextTick",
+    "chopForest","weather","killZones","jna_dataList", "jna_datalist_OPF", "mrkCSAT","nextTick",
     "bombRuns","wurzelGarrison","aggressionOccupants", "aggressionInvaders", "enemyResources", "HQKnowledge",
     "testingTimerIsActive", "version", "HR_Garage", "A3A_fuelAmountleftArray", "arsenalLimits", "rebelLoadouts",
     "minorSites"
@@ -57,6 +57,7 @@ if (_varName in _specialVarLoads) then {
     if (_varName == 'mrkSDK') then {{sidesX setVariable [[_x] call _translateMarker,teamPlayer,true]} forEach _varValue;};
     if (_varName == 'chopForest') then {chopForest = _varValue; publicVariable "chopForest"};
     if (_varName == 'jna_dataList') then {jna_dataList = +_varValue};
+    if (_varName == 'jna_dataList_OPF') then {jna_dataList_OPF = +_varValue};
     //Keeping these for older saves
     if (_varName == 'prestigeNATO') then {[Occupants, _varValue, 120] call A3A_fnc_addAggression};
     if (_varName == 'prestigeCSAT') then {[Invaders, _varValue, 120] call A3A_fnc_addAggression};

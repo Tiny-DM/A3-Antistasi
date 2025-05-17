@@ -82,7 +82,8 @@ if (!isServer) then {
     };
     [clientOwner, "destroyedBuildings"] remoteExecCall ["publicVariableClient", 2];
 
-    boxX call jn_fnc_arsenal_init;
+    (["boxX"] call A3A_fnc_copf) call jn_fnc_arsenal_init;
+    diag_log (["boxX"] call A3A_fnc_copf);
     if (A3A_hasACEMedical) then { call A3A_fnc_initACEUnconsciousHandler };
 };
 
@@ -114,7 +115,7 @@ incomeRep = false;
 autoHeal = true;				//Should AI in player squad automatically heal teammates
 
 player switchMove ""; // kick the player out of any animation before teleporting
-player setPos (getMarkerPos respawnTeamPlayer);
+player setPos (getMarkerPos ("respawnTeamPlayer" call A3A_fnc_copf));
 player setVariable ["spawner",true,true];
 
 if (A3A_hasTFAR || A3A_hasTFARBeta || A3A_hasACRE) then {

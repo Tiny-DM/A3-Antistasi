@@ -29,6 +29,7 @@ colorOccupants = "colorBLUFOR";
 colorInvaders = "colorOPFOR";
 colorTeamPlayer = "colorGUER";
 respawnTeamPlayer = "respawn_guerrila";			// not really sure why we have two markers here (also "Synd_HQ")
+respawnTeamPlayer_OPF  = "respawn_east";
 posHQ = getMarkerPos respawnTeamPlayer;
 
 ////////////////////////////////////////
@@ -211,3 +212,5 @@ medicAnims = ["AinvPknlMstpSnonWnonDnon_medic_1","AinvPknlMstpSnonWnonDnon_medic
 
 
 Info("initVarCommon completed");
+
+call A3A_fnc_opforDict;

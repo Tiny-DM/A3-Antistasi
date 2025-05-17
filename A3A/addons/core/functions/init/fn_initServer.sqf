@@ -92,7 +92,7 @@ private _savedParamsHM = createHashMapFromArray (A3A_saveData get "params");
 if (A3A_hasACEMedical) then { call A3A_fnc_initACEUnconsciousHandler };
 
 // Need to run this before game load or initial unlocks. Params dependency.
-boxX call jn_fnc_arsenal_init;
+(["boxX"] call A3A_fnc_copf) call jn_fnc_arsenal_init;
 
 // This does the actual template loading in the middle somewhere
 [A3A_saveData] call A3A_fnc_initVarServer;
@@ -138,6 +138,7 @@ else
 
         private _arsenalTab = _class call jn_fnc_arsenal_itemType;
         jna_dataList#_arsenalTab pushBack [_class, _count];         // direct add to avoid O(N^2) issue
+        jna_dataList_OPF#_arsenalTab pushBack [_class, _count];         // TODO OPF
 
         private _categories = _class call A3A_fnc_equipmentClassToCategories;
         { (missionNamespace getVariable ("unlocked" + _x)) pushBack _class } forEach _categories;
@@ -149,7 +150,7 @@ else
     { publicVariable ("unlocked" + _x) } forEach keys _categoriesToPublish;
 
     Info("Initial arsenal unlocks completed");
-    call A3A_fnc_checkRadiosUnlocked;
+    [] call A3A_fnc_checkRadiosUnlocked; // TODO OPF
 
     // HQ placement setup
     private _posHQ = A3A_saveData get "startPos";
@@ -224,7 +225,7 @@ publicVariable "theBoss";       // need to publish this even if empty
 call A3A_fnc_initSupports;
 
 // Needs saved arsenal data
-call A3A_fnc_generateRebelGear;
+[] call A3A_fnc_generateRebelGear;
 
 // Needs A3A_rebelGear for equipping
 call A3A_fnc_createPetros;
@@ -238,9 +239,13 @@ addMissionEventHandler ["HandleDisconnect",{_this call A3A_fnc_onPlayerDisconnec
 //PlayerDisconnected doesn't get access to the unit, so we shouldn't use it to handle saving.
 addMissionEventHandler ["PlayerDisconnected",{
     // Remove player from arsenal in case they disconnected while in it
-    private _temp = server getVariable ["jna_playersInArsenal",[]];
-    _temp = _temp - [param [4]];
-    server setVariable ["jna_playersInArsenal",_temp,true];
+    params ["_id", "_uid", "_name", "_jip", "_owner", "_idstr"];
+    private _reqPlayers = "";
+    if (_owner in server getVariable ["jna_playersInArsenal",[]]) then {_reqPlayers = "jna_playersInArsenal"};
+    if (_owner in server getVariable ["jna_playersInArsenal_OPF",[]]) then {_reqPlayers = "jna_playersInArsenal_OPF"};
+    private _temp = server getVariable [_reqPlayers,[]];
+    _temp = _temp - [_owner];
+    server setVariable [_reqPlayers,_temp,true];
     _this call A3A_fnc_onHeadlessClientDisconnect;
     false;
 }];

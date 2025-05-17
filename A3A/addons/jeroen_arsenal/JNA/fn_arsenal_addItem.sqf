@@ -4,14 +4,16 @@
 
 private _array = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
 
+params["_index","_item",["_amount",1],["_player",""]];
+
 if(typeName (_this select 0) isEqualTo "SCALAR")then{//[_index, _item] and [_index, _item, _amount];
-	params["_index","_item",["_amount",1]];
+	
 	if(_index < 0)exitWith{
 		diag_log format ["%1: [Antistasi] | ERROR | fn_arsenal_additem.sqf | Failed to addItem:%2.",servertime,_this];
 		};
 	_array set [_index,[[_item,_amount]]];
 }else{
-	_array = _this;
+	_array = [_index,_item,_amount];
 };
 
 {
@@ -43,12 +45,15 @@ if(typeName (_this select 0) isEqualTo "SCALAR")then{//[_index, _item] and [_ind
 				private _radioName = getText(configfile >> "CfgVehicles" >> _item >> "acre_baseClass");
 				if!(_radioName isEqualTo "")then{_item = _radioName};
 
+				private _reqPlayers = ["jna_playersInArsenal","",false] call A3A_fnc_copf;
+				
 				// Update server immediately if local. Avoids lag after unlockEquipment
-				if (isServer) then { ["UpdateItemAdd",[_index, _item, _amount,true]] call jn_fnc_arsenal }
-				else { ["UpdateItemAdd",[_index, _item, _amount,true]] remoteExecCall ["jn_fnc_arsenal",2] };
+				if (isServer) then { ["UpdateItemAdd",[_index, _item, _amount,true,_player]] call jn_fnc_arsenal }
+				else { ["UpdateItemAdd",[_index, _item, _amount,true,_player]] remoteExecCall ["jn_fnc_arsenal",2] };
 
 				// then update other players. Don't execute on server twice
-				private _playersInArsenal = +(server getVariable ["jna_playersInArsenal",[]]) - [2];
+				private _reqPlayers = ["jna_playersInArsenal","",false] call A3A_fnc_copf;
+				private _playersInArsenal = +(server getVariable [_reqPlayers,[]]) - [2];
 				if (0 in _playersInArsenal) then { _playersInArsenal = -2 };
 				if (_playersInArsenal isEqualTo []) exitWith {};
 				["UpdateItemAdd",[_index, _item, _amount,true]] remoteExecCall ["jn_fnc_arsenal",_playersInArsenal];

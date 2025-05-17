@@ -262,9 +262,15 @@ switch _mode do {
 	/////////////////////////////////////////////////////////////////////////////////////////// Externaly called
 	case "Open": {
 		diag_log "JNA open arsenal";
-		jna_dataList = _this select 0;
+		_player = _this select 1;
+		if (([_player] call A3A_fnc_isopf) isEqualTo Invaders) then {
+			jna_dataList_OPF = _this select 0;
+		} else {
+			jna_dataList = _this select 0;
+		};
 		["SaveTFAR"] call jn_fnc_arsenal;
-		private _object = missionnamespace getVariable ["jna_object",objNull];
+		private _reqBox = ["jna_object","",false] call A3A_fnc_copf;
+		private _object = missionnamespace getVariable [_reqBox,objNull];
 		["Open",[nil,_object,player,false]] call bis_fnc_arsenal;
 	};
 
@@ -771,6 +777,7 @@ switch _mode do {
 		_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _index);
 		_type = (ctrltype _ctrlList == 102);
 
+		private _jna_datalist = (["jna_datalist"] call A3A_fnc_copf);
 
 		_inventory = if(_index == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG) then
 		{
@@ -789,11 +796,11 @@ switch _mode do {
 				if([_usableMagazines, _itemAvailable] call _arrayContains) then {
 					_magazines set [count _magazines,[_itemAvailable, _amountAvailable]];
 				};
-			} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
+			} forEach (_jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
 			//return
 			_magazines;
 		}else{
-			(jna_dataList select _index);
+			(_jna_dataList select _index);
 		};
 
 		["CreateList",[ _display, _index, _inventory]] call jn_fnc_arsenal;
@@ -969,7 +976,7 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "CreateListAll":{
 		_display =  _this select 0;
-		_inventory_box_all = jna_dataList;
+		_inventory_box_all = (["jna_datalist"] call A3A_fnc_copf);
 		{
 			_inventory_box = _x;
 			_index = _foreachindex;
@@ -1146,12 +1153,13 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////  GLOBAL
 	case "UpdateItemAdd":{
-		params ["_index","_item","_amount",["_updateDataList",false]];
+		params ["_index","_item","_amount",["_updateDataList",false],["_player",""]];
 
 		//update datalist
 		if(_updateDataList)then
 		{
-			jna_dataList set [_index, [jna_dataList select _index, [_item, _amount]] call jn_fnc_arsenal_addToArray];
+			private _reqArsenal = (["jna_datalist",_player] call A3A_fnc_copf);
+			_reqArsenal set [_index, [_reqArsenal select _index, [_item, _amount]] call jn_fnc_arsenal_addToArray];
 		};
 
 		private _display =  uiNamespace getVariable ["arsanalDisplay","No display"];
@@ -1208,11 +1216,12 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////  GLOBAL
 	case "UpdateItemRemove":{
-		params ["_index","_item","_amount",["_updateDataList",false]];
+		params ["_index","_item","_amount",["_updateDataList",false],["_player",""]];
 
 		//update datalist
 		if(_updateDataList)then{
-			jna_dataList set [_index, [jna_dataList select _index, [_item, _amount]] call jn_fnc_arsenal_removeFromArray];
+			private _reqArsenal = (["jna_datalist",_player] call A3A_fnc_copf);
+			_reqArsenal set [_index, [_reqArsenal select _index, [_item, _amount]] call jn_fnc_arsenal_removeFromArray];
 		};
 
 		private _display =  uiNamespace getVariable ["arsanalDisplay","No display"];
@@ -1457,7 +1466,7 @@ switch _mode do {
 						if (_amount == -1) then {_ammoTotal = -1; breakTo "updateWeapon"};//TODO marker for changed entry
 						_ammoTotal = _ammoTotal + _amount;
 					}
-				} forEach (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
+				} forEach ((["jna_datalist"] call A3A_fnc_copf) select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL);
 
 				//change color;
 				_colorMult = switch (_item call BIS_fnc_itemType select 1) do{
@@ -1768,7 +1777,7 @@ switch _mode do {
 						_magazines = getarray (configfile >> "cfgweapons" >> _item >> "magazines");
 						if (count _magazines > 0) then {
 							_mag = (_magazines select 0);
-							if([jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL, _mag] call jn_fnc_arsenal_itemCount > 0)then{
+							if([(["jna_datalist"] call A3A_fnc_copf) select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL, _mag] call jn_fnc_arsenal_itemCount > 0)then{
 								if((player canAddItemToUniform _mag)||(player canAddItemToVest _mag)||(player canAddItemToBackpack _mag))then{
 									player addmagazine _mag;
 									[IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL, _mag]call jn_fnc_arsenal_removeItem;
@@ -2230,7 +2239,8 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonInvToJNA": {
 		//_display = _this select 0;
-		private _object = missionnamespace getVariable ["jna_object",objNull];
+		private _reqBox = ["jna_object","",false] call A3A_fnc_copf;
+		private _object = missionnamespace getVariable [_reqBox,objNull];
 		//update server
 		[_object] remoteExec ["jn_fnc_arsenal_cargoToArsenal",2];
 	};

@@ -40,6 +40,7 @@ if (isServer) then {
 	["arsenalLimits"] call A3A_fnc_getStatVariable;
 	["rebelLoadouts"] call A3A_fnc_getStatVariable;
 	["jna_dataList"] call A3A_fnc_getStatVariable;
+	["jna_dataList_OPF"] call A3A_fnc_getStatVariable;
 	["minorSites"] call A3A_fnc_getStatVariable;
 	//===========================================================================
 
@@ -49,10 +50,20 @@ if (isServer) then {
 		private _arsenalTabDataArray = _x;
 		private _unlockedItemsInTab = _arsenalTabDataArray select { _x select 1 == -1 } apply { _x select 0 };
 		{
-			private _categories = [_x, true, true] call A3A_fnc_unlockEquipment;
+			private _categories = [_x, true, true, "IND"] call A3A_fnc_unlockEquipment;
 			_categoriesToPublish insert [true, _categories, []];
 		} forEach _unlockedItemsInTab;
-	} forEach jna_dataList;
+	} forEach jna_dataList; // TODO OPF
+
+	private _categoriesToPublish = createHashMap;
+	{
+		private _arsenalTabDataArray = _x;
+		private _unlockedItemsInTab = _arsenalTabDataArray select { _x select 1 == -1 } apply { _x select 0 };
+		{
+			private _categories = [_x, true, true, "OPF"] call A3A_fnc_unlockEquipment;
+			_categoriesToPublish insert [true, _categories, []];
+		} forEach _unlockedItemsInTab;
+	} forEach jna_dataList_OPF; // TODO OPF
 
 	Info_1("Categories to publish: %1", keys _categoriesToPublish);
 
@@ -64,7 +75,7 @@ if (isServer) then {
 	};
 
 	//Check if we have radios unlocked and update haveRadio.
-	call A3A_fnc_checkRadiosUnlocked;
+	[] call A3A_fnc_checkRadiosUnlocked; // TODO OPF
 
 	// Don't have minor sites here, but they're not visible so it's fine
 	{

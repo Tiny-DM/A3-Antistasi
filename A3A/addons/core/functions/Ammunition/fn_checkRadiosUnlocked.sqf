@@ -10,11 +10,13 @@
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
 
 // ACRE doesn't use the standard radio slot. We need to bypass the check for this and just set haveRadio to true if ACRE is enabled -Hazey
+params [["_player",""]];
 if (A3A_hasACRE) then {
     haveRadio = true;
 } else {
     //See if any of the radios available in the arsenal are unlocked.
-    haveRadio = (((jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_RADIO) findIf {_x select 1 == -1}) > -1);
+    
+    haveRadio = ((((["jna_datalist",_player] call A3A_fnc_copf) select IDC_RSCDISPLAYARSENAL_TAB_RADIO) findIf {_x select 1 == -1}) > -1);
 };
-publicVariable "haveRadio";
+publicVariable "haveRadio"; // TODO OPF
 haveRadio;

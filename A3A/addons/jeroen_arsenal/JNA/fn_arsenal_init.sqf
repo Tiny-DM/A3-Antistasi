@@ -9,9 +9,10 @@ Info("JNA init started");
 params [["_object",objNull,[objNull]]];
 
 //check if it was already initialised
-if(!isnull (missionnamespace getVariable ["jna_object",objNull]))exitWith{};
+private _reqBox = ["jna_object","",false] call A3A_fnc_copf;
+if(!isnull (missionnamespace getVariable [_reqBox,objNull]))exitWith{};
 if(isNull _object)exitWith{["Error: wrong input given '%1'",_object] call BIS_fnc_error;};
-missionnamespace setVariable ["jna_object",_object];
+missionnamespace setVariable [_reqBox,_object];
 
 //change this for items that members can only take
 /* Indexes in the array correspond to these tabs:
@@ -61,6 +62,7 @@ if(isServer)then{
 
     //load default if it was not loaded from savegame
     if(isnil "jna_dataList" )then{jna_dataList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];};
+    if(isnil "jna_dataList_OPF" )then{jna_dataList_OPF = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];};
 };
 
 //player
@@ -111,12 +113,12 @@ if(hasInterface)then{
         _type = UINamespace getVariable ["jn_type",""];
 
         if(_type isEqualTo "arsenal")then{
-            [clientOwner] remoteExecCall ["jn_fnc_arsenal_requestClose",2];
+            [clientOwner,player] remoteExecCall ["jn_fnc_arsenal_requestClose",2];
         };
 
         if(_type isEqualTo "vehicleArsenal")then{
             ["Close"] call jn_fnc_vehicleArsenal;
-            [clientOwner] remoteExecCall ["jn_fnc_arsenal_requestClose",2];
+            [clientOwner,player] remoteExecCall ["jn_fnc_arsenal_requestClose",2];
         };
     }] call BIS_fnc_addScriptedEventHandler;
 };

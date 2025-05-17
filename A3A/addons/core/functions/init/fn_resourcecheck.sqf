@@ -107,10 +107,20 @@ while {true} do
 		private _count = _initCount * _equipMul;
 		_count = if (_count % 1 > random 1) then { ceil _count } else { floor _count };
 		private _arsenalTab = _class call jn_fnc_arsenal_itemType;
-		[_arsenalTab, _class, _count] call jn_fnc_arsenal_addItem;
-	} forEach (A3A_faction_reb get "initialRebelEquipment");
+		[_arsenalTab, _class, _count, "IND"] call jn_fnc_arsenal_addItem;
+	} forEach (A3A_faction_reb get "initialRebelEquipment"); // TODO OPF
+
+	{
+		if (_x isEqualType "") then { continue };
+		_x params ["_class", "_initCount"];
+		private _count = _initCount * _equipMul;
+		_count = if (_count % 1 > random 1) then { ceil _count } else { floor _count };
+		private _arsenalTab = _class call jn_fnc_arsenal_itemType;
+		[_arsenalTab, _class, _count, "OPF"] call jn_fnc_arsenal_addItem;
+	} forEach (A3A_faction_reb get "initialRebelEquipment"); // TODO OPF
+
     private _textX = format ["<t size='0.6' color='#C1C0BB'>" + (localize "STR_A3A_fn_init_resourceCheck_income"), _hrAdd, _resAdd];
-	private _textArsenal = [] call A3A_fnc_arsenalManage;
+	private _textArsenal = [] call A3A_fnc_arsenalManage; // TODO OPF
 	if (_textArsenal != "") then {_textX = format ["%1<br/>" + localize "STR_A3A_fn_init_resourceCheck_arsenal" + "<br/><br/>%2", _textX, _textArsenal]};
 	[petros, "taxRep", _textX] remoteExec ["A3A_fnc_commsMP", [teamPlayer, civilian]];
 

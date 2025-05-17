@@ -23,9 +23,10 @@ if(typeName (_this select 0) isEqualTo "SCALAR")then{//[_index, _item] or [_inde
 			if(_index == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG)then{_index = IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL};
 
 			//update
-			private _playersInArsenal = +(server getVariable ["jna_playersInArsenal",[]]);
+			private _reqPlayers = ["jna_playersInArsenal","",false] call A3A_fnc_copf;
+			private _playersInArsenal = +(server getVariable [_reqPlayers,[]]);
 			if!(0 in _playersInArsenal)then{_playersInArsenal pushBackUnique 2;};
-			["UpdateItemRemove",[_index, _item, _amount,true]] remoteExecCall ["jn_fnc_arsenal",_playersInArsenal];
+			["UpdateItemRemove",[_index, _item, _amount,true,player]] remoteExecCall ["jn_fnc_arsenal",_playersInArsenal];
 		};
 	} forEach _x;
 }foreach _array;

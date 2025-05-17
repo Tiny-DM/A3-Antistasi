@@ -60,4 +60,4 @@ missionNamespace setVariable ["jna_containerCargo_init", _attachmentsContainers]
 UINamespace setVariable ["jn_type","arsenal"];
 
 //request server to open arsenal
-[clientOwner] remoteExecCall ["jn_fnc_arsenal_requestOpen",2];
+[clientOwner,player] remoteExecCall ["jn_fnc_arsenal_requestOpen",2];

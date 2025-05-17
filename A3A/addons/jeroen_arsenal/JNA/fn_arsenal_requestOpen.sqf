@@ -12,12 +12,14 @@
 */
 
 if(!isServer)exitWith{};
-params ["_clientOwner"];
+params ["_clientOwner","_player"];
 
-_temp = server getVariable ["jna_playersInArsenal",[]];
+private _reqPlayers = ["jna_playersInArsenal",_player,false] call A3A_fnc_copf;
+_temp = server getVariable [_reqPlayers,[]];
 _temp pushBackUnique _clientOwner;
-server setVariable ["jna_playersInArsenal",_temp,true];
+server setVariable [_reqPlayers,_temp,true];
 
 diag_log ["_open arsenal for: clientOwner ",_clientOwner];
-["Open",[jna_dataList]] remoteExecCall ["jn_fnc_arsenal", _clientOwner];
+private _dataList = (["jna_datalist",_player] call A3A_fnc_copf);
+["Open",[_datalist]] remoteExecCall ["jn_fnc_arsenal", _clientOwner];
 

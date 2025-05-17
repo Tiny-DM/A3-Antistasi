@@ -1,22 +1,25 @@
 if (!isServer) exitWith {};
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
 
+params [["_player",""]];
+
 private _updated = "";
 private _item = objNull;
 private _cateogry = objNull;
-[boxX] call jn_fnc_arsenal_cargoToArsenal;
+[boxX] call jn_fnc_arsenal_cargoToArsenal; // TODO OPF
 
 if (minWeaps < 0) exitWith {""};		// no unlocks
+private _jna_datalist = (["jna_datalist",_player] call A3A_fnc_copf);
 
-private _weapons = ((jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_HANDGUN) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON)) select {_x select 1 != -1};
-private _explosives = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT) select {_x select 1 != -1};
-private _magazines = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW) select {_x select 1 != -1};
-private _backpacks = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_BACKPACK) select {_x select 1 != -1};
-private _items = ((jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_GOGGLES) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_MAP) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_GPS) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_RADIO) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_COMPASS) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_WATCH) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMACC) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMBIPOD) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_BINOCULARS) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC) + (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_UNIFORM)) select {_x select 1 != -1};
-private _optics = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC) select {_x select 1 != -1};
-private _nv = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_NVGS) select {_x select 1 != -1};
-private _helmets = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_HEADGEAR) select {_x select 1 != -1};
-private _vests = (jna_dataList select IDC_RSCDISPLAYARSENAL_TAB_VEST) select {_x select 1 != -1};
+private _weapons = ((_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_HANDGUN) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON)) select {_x select 1 != -1};
+private _explosives = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT) select {_x select 1 != -1};
+private _magazines = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW) select {_x select 1 != -1};
+private _backpacks = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_BACKPACK) select {_x select 1 != -1};
+private _items = ((_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_GOGGLES) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_MAP) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_GPS) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_RADIO) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_COMPASS) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_WATCH) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMACC) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMBIPOD) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_BINOCULARS) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC) + (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_UNIFORM)) select {_x select 1 != -1};
+private _optics = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC) select {_x select 1 != -1};
+private _nv = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_NVGS) select {_x select 1 != -1};
+private _helmets = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_HEADGEAR) select {_x select 1 != -1};
+private _vests = (_jna_datalist select IDC_RSCDISPLAYARSENAL_TAB_VEST) select {_x select 1 != -1};
 
 private _type = objNull;
 private _magazine = [];
@@ -53,7 +56,7 @@ private _categoriesToPublish = createHashMap;
 		if ("Backpacks" in _categories && {_item in allBackpacksTool}) exitWith {};			// should be UAV & static backpacks
 		if ("StaticWeaponParts" in _categories) exitWith {};
 
-		[_item, true] call A3A_fnc_unlockEquipment;
+		[_item, true,nil,_player] call A3A_fnc_unlockEquipment;
 		_categoriesToPublish insert [true, _categories, []];
 
 		private _name = switch (true) do {
@@ -71,7 +74,7 @@ private _categoriesToPublish = createHashMap;
 			if (!isNil "_weaponMagazine") then {
 				if (not(_weaponMagazine in unlockedMagazines)) then {
 					_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgMagazines" >> _weaponMagazine >> "displayName")];
-					private _categories = [_weaponMagazine, true] call A3A_fnc_unlockEquipment;
+					private _categories = [_weaponMagazine, true,nil,_player] call A3A_fnc_unlockEquipment;
 					_categoriesToPublish insert [true, _categories, []];
 				};
 			};
@@ -79,7 +82,7 @@ private _categoriesToPublish = createHashMap;
 	};
 } forEach _allExceptNVs;
 
-call A3A_fnc_checkRadiosUnlocked;
+[_player] call A3A_fnc_checkRadiosUnlocked;
 unlockedOptics = [unlockedOptics,[],{getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "mass")},"DESCEND"] call BIS_fnc_sortBy;
 
 //NVG Unlocking is special
@@ -101,7 +104,7 @@ _sortedNVs sort true;		// sort by count, ascending
 while {_totalNV >= minWeaps} do {
 	private _nvToUnlock = (_sortedNVs deleteAt (count _sortedNVs - 1)) select 1;
 	haveNV = true; publicVariable "haveNV";
-	private _categories = [_nvToUnlock, true] call A3A_fnc_unlockEquipment;
+	private _categories = [_nvToUnlock, true, nil,_player] call A3A_fnc_unlockEquipment;
 	_categoriesToPublish insert [true, _categories, []];
 	_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgWeapons" >> _nvToUnlock >> "displayName")];
 	_totalNV =_totalNV - minWeaps;		// arguably wrong but doesn't matter in practice
