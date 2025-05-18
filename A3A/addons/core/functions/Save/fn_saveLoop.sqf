@@ -136,7 +136,8 @@ _vehInGarage = _vehInGarage + vehInGarage;
 ["resourcesFIA", _resourcesBackground] call A3A_fnc_setStatVariable;
 ["hr", _hrBackground] call A3A_fnc_setStatVariable;
 ["vehInGarage", _vehInGarage] call A3A_fnc_setStatVariable;
-["HR_Garage", [] call HR_GRG_fnc_getSaveData] call A3A_fnc_setStatVariable;
+["HR_Garage", ["IND"] call HR_GRG_fnc_getSaveData] call A3A_fnc_setStatVariable;
+["HR_Garage_OPF", ["OPF"] call HR_GRG_fnc_getSaveData] call A3A_fnc_setStatVariable;
 
 _arrayEst = [];
 {

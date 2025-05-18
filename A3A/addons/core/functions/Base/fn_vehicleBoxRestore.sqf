@@ -25,6 +25,7 @@ License: MIT License
 */
 #include "..\..\script_component.hpp"
 FIX_LINE_NUMBERS()
+params [["_player",""]];
 
 if ((serverTime - (boxX getVariable ["lastUsed", -30])) < 30) exitWith {
     if (hasInterface) then {
@@ -68,35 +69,39 @@ private _hqVehicles = (vehicles inAreaArray [_posHQ, 150, 150]) select {
     _x setVariable ["A3A_reported", nil, true];
 } forEach _hqVehicles;
 
-if (HR_GRG_hasAmmoSource) then {
+private _hasAmmoSource = (["HR_GRG_hasAmmoSource",_player] call A3A_fnc_copf);
+private _hasRepairSource = (["HR_GRG_hasRepairSource",_player] call A3A_fnc_copf);
+private _hasFuelSource = (["HR_GRG_hasFuelSource",_player] call A3A_fnc_copf);
+
+if (_hasAmmoSource) then {
     {
         [_x,1] remoteExec ["setVehicleAmmo",_x];
     } forEach _hqVehicles;
 };
 
-if (HR_GRG_hasRepairSource) then {
+if (_hasRepairSource) then {
     {
         _x setDamage 0;
         if (_x getVariable ["incapacitated",false]) then {_x setVariable ["incapacitated",false,true]};
     } forEach _hqVehicles;
 };
 
-if (HR_GRG_hasFuelSource) then {
+if (_hasFuelSource) then {
     {
-        [_x] remoteExecCall ["HR_GRG_fnc_refuelVehicleFromSources", 2];
+        [_x,_player] remoteExecCall ["HR_GRG_fnc_refuelVehicleFromSources", 2];
         sleep 0.5; // delay to reduce broadcast spam
     } forEach _hqVehicles;
 };
 
 private _additiveTexts = [localize "STR_A3A_base_vehicleBoxRestore_noreported"]; 
  
-if (HR_GRG_hasRepairSource) then { 
+if (_hasRepairSource) then { 
 	_additiveTexts pushBack (localize "STR_A3A_base_vehicleBoxRestore_repaired"); 
 }; 
-if (HR_GRG_hasAmmoSource) then { 
+if (_hasAmmoSource) then { 
 	_additiveTexts pushBack (localize "STR_A3A_base_vehicleBoxRestore_rearmed"); 
 }; 
-if (HR_GRG_hasFuelSource) then { 
+if (_hasFuelSource) then { 
 	_additiveTexts pushBack (localize "STR_A3A_base_vehicleBoxRestore_refueled"); 
 }; 
  

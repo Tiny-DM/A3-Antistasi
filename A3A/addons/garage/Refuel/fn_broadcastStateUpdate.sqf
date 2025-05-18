@@ -19,12 +19,15 @@ Example:
 
 License: APL-ND
 */
-params ["_vUID", "_state", ["_stateIndex",0,[0]]];
+params ["_data","_player"];
+_data params ["_vUID", "_state", ["_stateIndex",0,[0]]];
 if (isNil "_vUID" || isNil "_state") exitWith {false};
+private _reqUsers = (["HR_GRG_Users",_player] call A3A_fnc_copf);
 
-if (HR_GRG_Users isNotEqualTo []) then {
-    private _recipiants = +HR_GRG_Users;
+if (_reqUsers isNotEqualTo []) then {
+    private _recipiants = +_reqUsers;
     _recipiants pushBackUnique 2;
-    [_vUID, _stateIndex, _state] remoteExecCall ["HR_GRG_fnc_reciveStateUpdate", _recipiants];
-    {_x publicVariableClient "HR_GRG_Sources"} forEach _recipiants;
+    [_vUID, _stateIndex, _state, _player] remoteExecCall ["HR_GRG_fnc_reciveStateUpdate", _recipiants];
+    private _reqSources = (["HR_GRG_Sources",_player,false] call A3A_fnc_copf);
+    {_x publicVariableClient _reqSources} forEach _recipiants;
 };

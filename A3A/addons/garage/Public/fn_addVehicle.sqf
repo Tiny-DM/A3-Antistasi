@@ -26,8 +26,10 @@ params [ ["_vehicle", objNull, [objNull]], ["_client", 2, [0]], ["_lockUID", ""]
 FIX_LINE_NUMBERS()
 
 if (!isServer) exitWith { Error("called on client, this is a server only function") };
-if (isNil "HR_GRG_Vehicles") then { [] call HR_GRG_fnc_initServer };
+private _reqGarage = (["HR_GRG_Vehicles",_player,false] call A3A_fnc_copf);
+if (isNil _reqGarage) then { [] call HR_GRG_fnc_initServer };
 private _class = typeOf _vehicle;
+_reqGarage = call compile _reqGarage;
 
 //validate input
 if (isNull _vehicle) exitWith { ["STR_HR_GRG_Feedback_addVehicle_Null"] remoteExec ["HR_GRG_fnc_Hint", _client]; false };
@@ -37,9 +39,11 @@ if (_player isNotEqualTo vehicle _player) exitWith { ["STR_HR_GRG_Feedback_addVe
 if (_player distance _vehicle > 25) exitWith {["STR_HR_GRG_Feedback_addVehicle_Distance"] remoteExec ["HR_GRG_fnc_Hint", _client]; false };
 
     //Valid area
-private _friendlyMarkers = (["Synd_HQ"] +outposts + seaports + airportsX + factories + resourcesX) select {sidesX getVariable [_x,sideUnknown] == teamPlayer}; //rebel locations with a flag
+private _side = side _player; // TODO OPF undercover players cant garage
+private _hqMarker = (["Synd_HQ",_player,false] call A3A_fnc_copf);
+private _friendlyMarkers = ([_hqMarker] + outposts + seaports + airportsX + factories + resourcesX) select {sidesX getVariable [_x,sideUnknown] == _side}; //rebel locations with a flag
 private _inArea = _friendlyMarkers findIf { count ([_player, _vehicle] inAreaArray _x) > 1 };
-if !(_inArea > -1) exitWith {["STR_HR_GRG_Feedback_addVehicle_badLocation",[FactionGet(reb,"name")]] remoteExec ["HR_GRG_fnc_Hint", _client]; false };
+if !(_inArea > -1) exitWith {["STR_HR_GRG_Feedback_addVehicle_badLocation",[FactionGet(reb,"name")]] remoteExec ["HR_GRG_fnc_Hint", _client]; false }; // TODO OPF
 
     //No hostiles near
 
@@ -101,7 +105,7 @@ if (_cat < 0) exitWith { ["STR_HR_GRG_Feedback_addVehicle_GenericFail"] remoteEx
 
     //cap block
 private _capacity = 0;
-{ _capacity = _capacity + count _x } forEach HR_GRG_Vehicles;
+{ _capacity = _capacity + count _x } forEach _reqGarage;
 
 private _countStatics = {_x isKindOf "StaticWeapon"} count (attachedObjects _vehicle);
 if ((call HR_GRG_VehCap - _capacity) < (_countStatics + 1)) exitWith { ["STR_HR_GRG_Feedback_addVehicle_Capacity"] remoteExec ["HR_GRG_fnc_Hint", _client]; false };//HR_GRG_VehCap is defined in config.inc
@@ -109,7 +113,7 @@ if ((call HR_GRG_VehCap - _capacity) < (_countStatics + 1)) exitWith { ["STR_HR_
 //Block air garage outside of airbase
 if (
     (_class isKindOf "Air")
-    && {count (airportsX select {(sidesX getVariable [_x,sideUnknown] == teamPlayer) and (_player inArea _x)}) < 1} //no airports
+    && {count (airportsX select {(sidesX getVariable [_x,sideUnknown] == _side) and (_player inArea _x)}) < 1} //no airports
 ) exitWith {["STR_HR_GRG_Feedback_addVehicle_airBlocked", [FactionGet(reb,"name")]] remoteExec ["HR_GRG_fnc_Hint", _client]; false };
 
 //here to allow adaption of external Antistasi system without needing to addapt code under APL-ND
@@ -183,12 +187,12 @@ private _addVehicle = {
 
     //Add vehicle to garage
     private _vehUID = [] call HR_GRG_fnc_genVehUID;
-    (HR_GRG_Vehicles#_cat) set [_vehUID, [cfgDispName(_class), _class, _lockUID, "", _stateData, _lockName, _customisation, _lockTime]];
+    (_reqGarage#_cat) set [_vehUID, [cfgDispName(_class), _class, _lockUID, "", _stateData, _lockName, _customisation, _lockTime]];
 
     //register vehicle as a source
     if (_sourceIndex != -1) then {
-        (HR_GRG_Sources#_sourceIndex) pushBack _vehUID;
-        [_sourceIndex] call HR_GRG_fnc_declairSources;
+        ((["HR_GRG_Sources",_player] call A3A_fnc_copf)#_sourceIndex) pushBack _vehUID;
+        [_sourceIndex,_player] call HR_GRG_fnc_declairSources;
     };
 
     Info_6("By: %1 [%2] | Type: %3 | Vehicle ID: %4 | Lock: %5 | Source: %6", name _player, getPlayerUID _player, cfgDispName(_class), _vehUID, _locking, _sourceIndex);
@@ -213,14 +217,16 @@ private _refreshCode = {
     private _cats = _this apply { HR_GRG_Cats#_x };
     {
         if (ctrlEnabled _x) then {
-            [_x, _this#_forEachIndex] call HR_GRG_fnc_reloadCategory;
+            [_x, _this#_forEachIndex, _player] call HR_GRG_fnc_reloadCategory;
         };
     } forEach _cats;
     call HR_GRG_fnc_updateVehicleCount;
 };
 
-if !(HR_GRG_Users isEqualTo []) then {
-    [ _catsRequiringUpdate, _refreshCode ] remoteExecCall ["call", HR_GRG_Users];
+private _reqUsers = (["HR_GRG_Users",_player] call A3A_fnc_copf);
+
+if !(_reqUsers isEqualTo []) then {
+    [ _catsRequiringUpdate, _refreshCode ] remoteExecCall ["call", _reqUsers];
 };
 
 ["STR_HR_GRG_Feedback_addVehicle_Success", [cfgDispName(_class)] ] remoteExec ["HR_GRG_fnc_Hint", _client];

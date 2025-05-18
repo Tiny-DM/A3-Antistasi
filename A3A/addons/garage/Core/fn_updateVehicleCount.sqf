@@ -24,6 +24,6 @@ private _ctrl = _disp displayCtrl HR_GRG_IDC_CapacityCount;
 private _count = 0;
 {
     _count = _count + count _x;
-} forEach HR_GRG_Vehicles;
+} forEach (["HR_GRG_Vehicles"] call A3A_fnc_copf);
 
 _ctrl ctrlSetText (str _count +" / " + str (call HR_GRG_VehCap));

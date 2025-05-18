@@ -21,13 +21,13 @@
 params ["_playerUID"];
 
 private _lockCount = 0;
-private _allSources = flatten HR_GRG_Sources;
+private _allSources = flatten (HR_GRG_Sources + HR_GRG_Sources_OPF);
 {
     {
         if (_y#2 != _playerUID) then { continue };            // not locked by this player;
         if (_x in _allSources) then { continue };             // don't count sources
         _lockCount = _lockCount + 1;
     } forEach _x;                            // vehicles within category, hashmap
-} forEach HR_GRG_Vehicles;                   // categories array
+} forEach (HR_GRG_Vehicles + HR_GRG_Vehicles_OPF);                   // categories array
 
 _lockCount;

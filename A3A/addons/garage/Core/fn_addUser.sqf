@@ -20,7 +20,7 @@
 */
 #include "defines.inc"
 FIX_LINE_NUMBERS()
-params ["_client"];
+params ["_client","_player"];
 
 if (
     !isServer
@@ -28,9 +28,18 @@ if (
     || {!(_client isEqualType 0)}
 ) exitWith {false};
 
-if (isNil "HR_GRG_Users") then {HR_GRG_Users = []};
+if (isNil "HR_GRG_Users") then {
+    HR_GRG_Users = [];
+    HR_GRG_Users_OPF = [];
+};
 Trace_1("Adding user: %1", _client);
-HR_GRG_Users pushBack _client;
-_client publicVariableClient "HR_GRG_Vehicles";
-_client publicVariableClient "HR_GRG_Sources";
+if ([_player] call A3A_fnc_isOpf == Invaders) then {
+    HR_GRG_Users_OPF pushBack _client;
+} else {
+    HR_GRG_Users pushBack _client;
+};
+private _reqGarage = (["HR_GRG_Vehicles",_player,false] call A3A_fnc_copf);
+private _reqSources = (["HR_GRG_Sources",_player,false] call A3A_fnc_copf);
+_client publicVariableClient _reqGarage;
+_client publicVariableClient _reqSources;
 true

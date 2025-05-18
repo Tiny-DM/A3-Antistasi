@@ -28,7 +28,7 @@ _selectedVehicle params [["_catIndex", -1], ["_vehUID", -1]];
 if ( (_catIndex isEqualTo -1) || (_vehUID isEqualTo -1) ) exitWith {};
 Trace_2("Attempting to toggle lock for vehicle at cat: %1 | Vehicle ID: %2", _catIndex, _vehUID);
 
-private _cat = HR_GRG_Vehicles#_catIndex;
+private _cat = (["HR_GRG_Vehicles",_player] call A3A_fnc_copf)#_catIndex;
 private _veh = _cat get _vehUID;
 private _lock = _veh#2;
 private _owner = _veh#5;
@@ -41,7 +41,7 @@ _success = call {
 if (!_success) exitWith { Trace("Failed to toggle lock") };
 
 // If we're trying to lock a non-source vehicle, check player isn't at the lock limit
-if (_lock isEqualTo "" && !(_vehUID in flatten HR_GRG_Sources) && {[_UID] call HR_GRG_fnc_getLockCount >= _player call HR_GRG_getLockLimit}) exitWith {
+if (_lock isEqualTo "" && !(_vehUID in flatten (["HR_GRG_Sources",_player] call A3A_fnc_copf)) && {[_UID] call HR_GRG_fnc_getLockCount >= _player call HR_GRG_getLockLimit}) exitWith {
     ["STR_HR_GRG_Feedback_toggleLock_limit"] remoteExecCall ["HR_GRG_fnc_Hint", _player];
 };
 

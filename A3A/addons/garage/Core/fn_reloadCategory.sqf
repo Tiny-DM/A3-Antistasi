@@ -21,8 +21,8 @@
 */
 #include "defines.inc"
 FIX_LINE_NUMBERS()
-params ["_ctrl", "_catIndex"];
-if (isNil "HR_GRG_Vehicles") exitWith {Trace("Reloading category canceled no garage data");};
+params ["_ctrl", "_catIndex", ["_player",""]];
+if (isNil "HR_GRG_Vehicles" && isNil "HR_GRG_Vehicles_OPF") exitWith {Trace("Reloading category canceled no garage data");};
 Trace("Reloading category");
 
 lbClear _ctrl;
@@ -65,7 +65,7 @@ private _HR_GRG_SelectedVehicles = [-1,-1,""];
     _ctrl lbSetTooltip [_index, _tooltipText];
     _ctrl lbSetPictureRightColorSelected [_index, [0.85,0.85,0.55,1]];
 
-} forEach (HR_GRG_Vehicles#_catIndex);
+} forEach ((["HR_GRG_Vehicles",_player] call A3A_fnc_copf)#_catIndex);
 
 //sort and find selected item to re-select it after the clear
 lbSort _ctrl;

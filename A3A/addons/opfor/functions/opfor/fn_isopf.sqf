@@ -2,7 +2,7 @@ private _sideCheck = _this select 0;
 
 private _sideWanted = switch (true) do {
     case (_sideCheck in ["OPF","IND"]): {
-        [teamPlayer,Invaders] select (_sideCheck isEqualTo "OPF");
+        [independent,east] select (_sideCheck isEqualTo "OPF");
     };
     case (typeName _sideCheck in ["OBJECT","GROUP","LOCATION"]): {
         side _sideCheck;
@@ -11,7 +11,7 @@ private _sideWanted = switch (true) do {
         side leader group player;
     };
     default {
-        teamPlayer;
+        independent;
     };
 };
 

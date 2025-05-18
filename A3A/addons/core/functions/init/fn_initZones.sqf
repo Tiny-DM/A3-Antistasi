@@ -24,7 +24,8 @@ if (!isClass _mapInfo) then {_mapInfo = configFile/"A3A"/"mapInfo"/toLower world
 outpostsFIA = [];
 destroyedSites = [];
 garrison setVariable ["Synd_HQ", [], true];
-markersX = airportsX + resourcesX + factories + outposts + seaports + ["Synd_HQ"];
+garrison setVariable ["Synd_HQ_OPF", [], true];
+markersX = airportsX + resourcesX + factories + outposts + seaports + ["Synd_HQ"] + ["Synd_HQ_OPF"];
 markersX apply {
 	_x setMarkerAlpha 0;
 	spawner setVariable [_x, 2, true];
@@ -103,6 +104,7 @@ configClasses (configfile >> "CfgWorlds" >> worldName >> "Names") apply {
 
 markersX = markersX + citiesX;
 sidesX setVariable ["Synd_HQ", teamPlayer, true];
+sidesX setVariable ["Synd_HQ_OPF", Invaders, true];
 sidesX setVariable ["NATO_carrier", Occupants, true];
 sidesX setVariable ["CSAT_carrier", Invaders, true];
 

@@ -73,7 +73,7 @@ if (_vehNodes isEqualType []) then {
             _ctrlExtraMounts lbSetTextRight [_index, format ["Size: %1", _size]];
             Trace_4("Mount Added to list | Class: %1 | UID: %2 | Checked: %3 | Size: %4", _staticClass, _x, (_checkedOut isEqualTo HR_GRG_PlayerUID), _type);
         };
-    } forEach (HR_GRG_Vehicles#HR_GRG_STATICINDEX);//statics
+    } forEach ((["HR_GRG_Vehicles"] call A3A_fnc_copf)#HR_GRG_STATICINDEX);//statics
     lbSort _ctrlExtraMounts;
 };
 if (_reloadMounts) then { [] call HR_GRG_fnc_reloadMounts };
@@ -114,27 +114,31 @@ lbSort _ctrlExtraAnim;
 HR_GRG_curAnims = _customisation#1;
 [HR_GRG_previewVeh, HR_GRG_curTexture, HR_GRG_curAnims] call BIS_fnc_initVehicle;
 
+private _hasAmmoSource = (["HR_GRG_hasAmmoSource",_player] call A3A_fnc_copf);
+private _hasRepairSource = (["HR_GRG_hasRepairSource",_player] call A3A_fnc_copf);
+private _hasFuelSource = (["HR_GRG_hasFuelSource",_player] call A3A_fnc_copf);
+
 //update source panel
-_ctrlSourcePanelAmmo ctrlSetStructuredText composeText ["   ", image RearmIcon, " ", image (checkboxTextures select (HR_GRG_hasAmmoSource && !HR_GRG_ServiceDisabled_Rearm))];
+_ctrlSourcePanelAmmo ctrlSetStructuredText composeText ["   ", image RearmIcon, " ", image (checkboxTextures select (_hasAmmoSource && !HR_GRG_ServiceDisabled_Rearm))];
 _ctrlSourcePanelAmmo ctrlSetTooltip ([
     localize "STR_HR_GRG_SourcePanel_toolTip_Ammo_Unavailable"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Ammo_Available"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Ammo_Disabled"
-] select (if (HR_GRG_ServiceDisabled_Rearm) then {2} else {HR_GRG_hasAmmoSource}));
+] select (if (HR_GRG_ServiceDisabled_Rearm) then {2} else {_hasAmmoSource}));
 
-_ctrlSourcePanelFuel ctrlSetStructuredText composeText ["   ", image RefuelIcon, " ", image (checkboxTextures select (HR_GRG_hasFuelSource && !HR_GRG_ServiceDisabled_Refuel))];
+_ctrlSourcePanelFuel ctrlSetStructuredText composeText ["   ", image RefuelIcon, " ", image (checkboxTextures select (_hasFuelSource && !HR_GRG_ServiceDisabled_Refuel))];
 _ctrlSourcePanelFuel ctrlSetTooltip ([
     localize "STR_HR_GRG_SourcePanel_toolTip_Fuel_Unavailable"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Fuel_Available"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Fuel_Disabled"
-] select (if (HR_GRG_ServiceDisabled_Refuel) then {2} else {HR_GRG_hasFuelSource}));
+] select (if (HR_GRG_ServiceDisabled_Refuel) then {2} else {_hasFuelSource}));
 
-_ctrlSourcePanelRepair ctrlSetStructuredText composeText ["   ", image RepairIcon, " ", image (checkboxTextures select (HR_GRG_hasRepairSource && !HR_GRG_ServiceDisabled_Repair))];
+_ctrlSourcePanelRepair ctrlSetStructuredText composeText ["   ", image RepairIcon, " ", image (checkboxTextures select (_hasRepairSource && !HR_GRG_ServiceDisabled_Repair))];
 _ctrlSourcePanelRepair ctrlSetTooltip ([
     localize "STR_HR_GRG_SourcePanel_toolTip_Repair_Unavailable"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Repair_Available"
     , localize "STR_HR_GRG_SourcePanel_toolTip_Repair_Disabled"
-] select (if (HR_GRG_ServiceDisabled_Repair) then {2} else {HR_GRG_hasRepairSource}));
+] select (if (HR_GRG_ServiceDisabled_Repair) then {2} else {_hasRepairSource}));
 
 if (isNull HR_GRG_previewVeh) exitWith {};
 //update info panel

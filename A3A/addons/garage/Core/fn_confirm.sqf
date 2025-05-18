@@ -25,17 +25,17 @@ private _fnc_placed = {
     params ["_veh"];
 
     if (!isNull _veh && !HR_GRG_ServiceDisabled_Refuel) then {
-        [_veh] remoteExecCall ["HR_GRG_fnc_refuelVehicleFromSources", 2];
+        [_veh,player] remoteExecCall ["HR_GRG_fnc_refuelVehicleFromSources", 2];
     };
     _veh call HR_GRG_fnc_vehInit;
 
     private _fnc = if (!isNull _veh) then {"HR_GRG_fnc_removeFromPool"} else {"HR_GRG_fnc_releaseAllVehicles"};
     [clientOwner, player, _fnc] remoteExecCall ["HR_GRG_fnc_execForGarageUsers", 2]; //run code on server as HR_GRG_Users is maintained ONLY on the server
 };
-
+private _reqDataVeh = (["HR_GRG_Vehicles"] call A3A_fnc_copf);
 //get mounts state
 HR_GRG_Mounts apply {
-    private _static = (HR_GRG_Vehicles#HR_GRG_STATICINDEX) get (_x#1);
+    private _static = (_reqDataVeh#HR_GRG_STATICINDEX) get (_x#1);
     _x pushBack (_static#4);
     _x
 };
@@ -48,7 +48,7 @@ HR_GRG_Mounts apply {
     , HR_GRG_Mounts
     , if (
             HR_GRG_Pylons_Enabled //Pylon editing enabled
-            && { HR_GRG_hasAmmoSource } //or ammo source registered
+            && { (["HR_GRG_hasAmmoSource"] call A3A_fnc_copf) } //or ammo source registered
     ) then {HR_GRG_Pylons} else {nil}
     , HR_GRG_previewVehState
 ] call HR_GRG_fnc_confirmPlacement;

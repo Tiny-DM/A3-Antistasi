@@ -26,7 +26,7 @@ if (!isMultiPlayer) then {_resourcesFIA = server getVariable "resourcesFIA"} els
 	};
 
 if (_resourcesFIA < _cost) exitWith {[_titleStr, format [localize "STR_A3A_fn_reinf_addFIAVeh_no_money",_cost]] call A3A_fnc_customHint;};
-private _nearestMarker = [markersX select {sidesX getVariable [_x,sideUnknown] == teamPlayer},player] call BIS_fnc_nearestPosition;
+private _nearestMarker = [markersX select {sidesX getVariable [_x,sideUnknown] == side player},player] call BIS_fnc_nearestPosition;
 if !(player inArea _nearestMarker) exitWith {[_titleStr, localize "STR_A3A_fn_reinf_addFIAVeh_no_flag"] call A3A_fnc_customHint;};
 
 private _extraMessage =	format ["Buying vehicle for $%1.", _cost];

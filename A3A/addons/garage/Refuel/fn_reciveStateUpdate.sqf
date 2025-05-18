@@ -19,10 +19,10 @@ Example:
 
 License: APL-ND
 */
-params ["_vUID","_stateIndex", "_state"];
+params ["_vUID","_stateIndex", "_state", ["_player",""]];
 
 private "_vehData";
-{ _vehData = _x get _vUID; if (!isNil "_vehdata") exitWith {}; } forEach HR_GRG_Vehicles;
+{ _vehData = _x get _vUID; if (!isNil "_vehdata") exitWith {}; } forEach (["HR_GRG_Vehicles",_player] call A3A_fnc_copf);
 
 //#4 == state preservation data
 (_vehData#4) set [_stateIndex, _state];

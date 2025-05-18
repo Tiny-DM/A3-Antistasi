@@ -28,7 +28,7 @@ FIX_LINE_NUMBERS()
 Trace_1("Reciving broadcast: %1",_this);
 params ["_lockUID", "_checkoutUID", "_catIndex", "_vehUID", "_player", "_switch", "_time"];
 
-private _cat = HR_GRG_Vehicles#_catIndex;
+private _cat = (["HR_GRG_Vehicles"] call A3A_fnc_copf)#_catIndex;
 private _vehicle = _cat get _vehUID;
 
 //set the new data
@@ -53,7 +53,7 @@ if (_isPlayer) then {
         [] call HR_GRG_fnc_reloadPreview;
         if (
             HR_GRG_Pylons_Enabled //Pylon editing enabled
-            && { HR_GRG_hasAmmoSource } //or ammo source registered
+            && { (["HR_GRG_hasAmmoSource"] call A3A_fnc_copf) } //or ammo source registered
         ) then { [] call HR_GRG_fnc_reloadPylons };
     };
     [true] call HR_GRG_fnc_toggleConfirmBttn;

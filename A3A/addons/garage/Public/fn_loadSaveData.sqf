@@ -42,7 +42,7 @@
 if (!isServer) exitWith {false};
 #include "defines.inc"
 FIX_LINE_NUMBERS()
-params [["_save", [], [[]] ]];
+params [["_save", [], [[]] ],["_side",""]];
 private _newGarage = [];
 for "_i" from 1 to (count HR_GRG_CATIDCS) do {_newGarage pushBack createHashMap;};
 private _validSave = _save params [
@@ -64,14 +64,19 @@ Info_1("Formatting an existing saved garage to %1 categories",count HR_GRG_CATID
 } forEach _garage; // each cat
 _garage = _newGarage;
 
-HR_GRG_Vehicles = +_garage;
+if ([_side] call A3A_fnc_isOpf == Invaders) then {
+    HR_GRG_Vehicles_OPF = +_garage;
+    HR_GRG_Sources_OPF = +_sources;
+} else {
+    HR_GRG_Vehicles = +_garage;
+    HR_GRG_Sources = +_sources;
+};
 HR_GRG_UID = +_uid;
-HR_GRG_Sources = +_sources;
 
-[] call HR_GRG_fnc_validateGarage;
+[_side] call HR_GRG_fnc_validateGarage;
 {
-    [_forEachIndex] call HR_GRG_fnc_declairSources;
-} forEach HR_GRG_Sources;
+    [_forEachIndex,_side] call HR_GRG_fnc_declairSources;
+} forEach (["HR_GRG_Sources",_side] call A3A_fnc_copf);
 
 if _validSave then {
     Trace("Garage restored");

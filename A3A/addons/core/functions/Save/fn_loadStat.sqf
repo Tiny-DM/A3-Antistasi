@@ -33,7 +33,7 @@ private _specialVarLoads = [
     "garrison","tasks","membersX","vehInGarage","destroyedBuildings","idlebases",
     "chopForest","weather","killZones","jna_dataList", "jna_datalist_OPF", "mrkCSAT","nextTick",
     "bombRuns","wurzelGarrison","aggressionOccupants", "aggressionInvaders", "enemyResources", "HQKnowledge",
-    "testingTimerIsActive", "version", "HR_Garage", "A3A_fuelAmountleftArray", "arsenalLimits", "rebelLoadouts",
+    "testingTimerIsActive", "version", "HR_Garage", "HR_Garage_OPF", "A3A_fuelAmountleftArray", "arsenalLimits", "rebelLoadouts",
     "minorSites"
 ];
 
@@ -95,7 +95,10 @@ if (_varName in _specialVarLoads) then {
         } forEach FactionGet(reb,"unitsSoldiers");
     };
     if (_varname == "HR_Garage") then {
-        [_varValue] call HR_GRG_fnc_loadSaveData;
+        [_varValue,"IND"] call HR_GRG_fnc_loadSaveData;
+    };
+    if (_varname == "HR_Garage_OPF") then {
+        [_varValue,"OPF"] call HR_GRG_fnc_loadSaveData;
     };
     if (_varName == 'vehInGarage') then { //convert old garage to new garage
         vehInGarage= [];

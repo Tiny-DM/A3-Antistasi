@@ -28,8 +28,14 @@ if (!isServer) exitWith {};
 Trace("Running server init");
 if (!isNil "HR_GRG_Init") exitWith {};//init already run.
 
-if (isNil "HR_GRG_Vehicles") then {[] call HR_GRG_fnc_loadSaveData};
-if (isNil "HR_GRG_Users") then {HR_GRG_Users = []};
+if (isNil "HR_GRG_Vehicles") then {
+    [[],"IND"] call HR_GRG_fnc_loadSaveData;
+    [[],"OPF"] call HR_GRG_fnc_loadSaveData
+};
+if (isNil "HR_GRG_Users") then {
+    HR_GRG_Users = [];
+    HR_GRG_Users_OPF = [];
+};
 [] call HR_GRG_fnc_validateGarage;
 
 //Handle improper exit of garage (crash)
@@ -38,8 +44,14 @@ addMissionEventHandler ["PlayerDisconnected", {
     if (_owner isNotEqualTo -1) then {
         private _UID = param [1,""];
         [_owner] call HR_GRG_fnc_removeUser;
-
-        private _recipients = +HR_GRG_Users;
+        private _recipients = [];
+        private _indPos = HR_GRG_Users find _owner;
+        private _opfPos = HR_GRG_Users_OPF find _owner;
+        if (_opfPos != -1) then {
+            _recipients = +HR_GRG_Users_OPF;
+        } else {
+            _recipients = +HR_GRG_Users;
+        };
         _recipients pushBackUnique 2;
         [_UID] remoteExecCall ["HR_GRG_fnc_releaseAllVehicles",_recipients];
     };

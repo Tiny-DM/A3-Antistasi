@@ -20,7 +20,7 @@
 */
 #include "defines.inc"
 FIX_LINE_NUMBERS()
-params [ ["_UID" ,"", [""]]];
+params [ ["_UID" ,"", [""]]],["_player",""];
 if (_UID isEqualTo "") exitWith {false};
 Trace_1("Releasing all vehicles with UID: %1", _UID);
 
@@ -29,13 +29,13 @@ Trace_1("Releasing all vehicles with UID: %1", _UID);
     {
         if ( (_y#3) isEqualTo _UID) then {_y set [3, ""] };
     } forEach _x;
-} forEach HR_GRG_Vehicles;
+} forEach (["HR_GRG_Vehicles",_player] call A3A_fnc_copf);
 
 //refresh category if client
 if (!isNull player) then {
     {
         if (ctrlEnabled _x) then {
-            [_x, _forEachIndex] call HR_GRG_fnc_reloadCategory;
+            [_x, _forEachIndex, _player] call HR_GRG_fnc_reloadCategory;
         };
     } forEach HR_GRG_Cats;
 };

@@ -35,6 +35,8 @@ if (isNil "HR_GRG_Placing") then { HR_GRG_Placing = false };
 if (HR_GRG_Placing) exitWith { closeDialog 2 };
 [] call HR_GRG_onOpenEvent;
 
+private _reqDataVeh = (["HR_GRG_Vehicles",player,false] call A3A_fnc_copf);
+
 //define general global variables used by garage
 private _disp = findDisplay HR_GRG_IDD_Garage;
 HR_GRG_PlayerUID = getPlayerUID player;
@@ -77,10 +79,10 @@ _disp displayAddEventHandler ["MouseZChanged","if !(HR_GRG_RMouseBtnDown) exitWi
 
 //add veh pool modified EH
 "HR_GRG_Event" addPublicVariableEventHandler {
-    if (isNil "HR_GRG_Vehicles") exitWith {};
+    if (isNil "HR_GRG_Vehicles" && isNil "HR_GRG_Vehicles_OPF") exitWith {};
     (_this#1) call HR_GRG_fnc_reciveBroadcast;
 };
-"HR_GRG_Vehicles" addPublicVariableEventHandler {
+_reqDataVeh addPublicVariableEventHandler {
     call HR_GRG_fnc_updateVehicleCount;
     private _disp = findDisplay HR_GRG_IDD_Garage;
     private _index = HR_GRG_Cats findIf {ctrlShown _x};
@@ -88,8 +90,8 @@ _disp displayAddEventHandler ["MouseZChanged","if !(HR_GRG_RMouseBtnDown) exitWi
     [_ctrl, _index] call HR_GRG_fnc_reloadCategory;
 };
 //add player to broadcast recipient list
-[clientOwner] remoteExecCall ["HR_GRG_fnc_addUser", 2]; //add to recipient
-waitUntil {!isNil "HR_GRG_Vehicles"};//wait for server response
+[clientOwner,player] remoteExecCall ["HR_GRG_fnc_addUser", 2]; //add to recipient
+waitUntil {!isNil _reqDataVeh};//wait for server response
 
 //define list of controls coresponding with list index
 HR_GRG_Cats = HR_GRG_CATIDCS apply {_disp displayCtrl _x}; //,HR_GRG_IDC_CatUnmanned,HR_GRG_IDC_CatVTOL
@@ -108,7 +110,7 @@ if (HR_GRG_disableSellButton) then {
 //extras list init
 if (
     !HR_GRG_Pylons_Enabled //Pylon editing disabled
-    || {!HR_GRG_hasAmmoSource} //or ammo source not registered
+    || {!(["HR_GRG_hasAmmoSource"] call A3A_fnc_copf)} //or ammo source not registered
 ) then {
     private _pylonBttn = _disp displayCtrl HR_GRG_IDC_BttnPylons;
     _pylonBttn ctrlEnable false;

@@ -12720,7 +12720,7 @@ class Mission
 						{
 							dataType="Marker";
 							position[]={16398.654,2.7509811,9861.5537};
-							name="Synd_HQ_1";
+							name="Synd_HQ_OPF";
 							markerType="RECTANGLE";
 							type="rectangle";
 							colorName="ColorPink";

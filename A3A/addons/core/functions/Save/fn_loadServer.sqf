@@ -30,6 +30,7 @@ if (isServer) then {
 	["membersX"] call A3A_fnc_getStatVariable;
 	["vehInGarage"] call A3A_fnc_getStatVariable;
     ["HR_Garage"] call A3A_fnc_getStatVariable;
+	["HR_Garage_OPF"] call A3A_fnc_getStatVariable;
     ["A3A_fuelAmountleftArray"] call A3A_fnc_getStatVariable;
 	["destroyedBuildings"] call A3A_fnc_getStatVariable;
 	["enemyResources"] call A3A_fnc_getStatVariable;

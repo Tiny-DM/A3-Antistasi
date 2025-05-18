@@ -45,7 +45,7 @@ private _savedPlayers = _namespace getVariable ["savedPlayers" + _postfix, []];
 	"prestigeOPFOR", "prestigeBLUFOR", "garrison", "wurzelGarrison", "usesWurzelGarrison", "minesX",
 	"outpostsFIA", "tasks", "idlebases", "idleassets", "killZones", "controlsSDK", "params",
 	"attackCountdownOccupants", "attackCountdownInvaders", "prestigeNATO", "prestigeCSAT",
-	"savedPlayers", "testingTimerIsActive", "HR_Garage", "A3A_fuelAmountleftArray", "HQKnowledge", "enemyResources",
+	"savedPlayers", "testingTimerIsActive", "HR_Garage", "HR_Garage_OPF", "A3A_fuelAmountleftArray", "HQKnowledge", "enemyResources",
 	"version", "name", "saveTime", "ended", "factions", "addonVics", "DLC", "arsenalLimits", "rebelLoadouts",
 	"minorSites"];
 

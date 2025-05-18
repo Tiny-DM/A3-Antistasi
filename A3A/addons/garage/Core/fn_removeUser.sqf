@@ -30,5 +30,11 @@ if (
 ) exitWith {false};
 
 Trace_1("Removing user: %1", _client);
-HR_GRG_Users deleteAt (HR_GRG_Users find _client);
+private _indPos = HR_GRG_Users find _client;
+private _opfPos = HR_GRG_Users_OPF find _client;
+if (_opfPos != -1) then {
+    HR_GRG_Users_OPF deleteAt _opfPos;
+} else {
+    HR_GRG_Users deleteAt _indPos;
+};
 true

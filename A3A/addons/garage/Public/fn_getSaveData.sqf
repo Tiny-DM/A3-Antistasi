@@ -40,11 +40,15 @@
 if (!isServer) exitWith {};
 #include "defines.inc"
 FIX_LINE_NUMBERS()
+params ["_side"];
 if (isNil "HR_GRG_Vehicles") then { [] call HR_GRG_fnc_initServer };
+private _reqGarage = (["HR_GRG_Vehicles",_side] call A3A_fnc_copf);
+private _reqSources = (["HR_GRG_Sources",_side] call A3A_fnc_copf);
+
 //get data to be saved
-private _garage = + HR_GRG_Vehicles; //have had issus with refrences persisting trough save procces causing mangling of save data
+private _garage = +_reqGarage; //have had issus with refrences persisting trough save procces causing mangling of save data
 private _UID = HR_GRG_UID;
-private _sources = [+(HR_GRG_Sources#0),+(HR_GRG_Sources#1),+(HR_GRG_Sources#2)];
+private _sources = [+(_reqSources#0),+(_reqSources#1),+(_reqSources#2)];
 
 //correct some data to savable state
 {

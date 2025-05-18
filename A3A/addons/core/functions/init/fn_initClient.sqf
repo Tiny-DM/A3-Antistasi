@@ -391,17 +391,17 @@ _flagLight lightAttachObject [flagX, [0, 0, 4]];
 _flagLight setLightAttenuation [7, 0, 0.5, 0.5];
 
 vehicleBox allowDamage false;
-vehicleBox addAction [localize "STR_A3A_actions_restore_units", A3A_fnc_vehicleBoxRestore,nil,0,false,true,"","(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer) and !A3A_removeRestore", 4];
+vehicleBox addAction [localize "STR_A3A_actions_restore_units", {[player] call A3A_fnc_vehicleBoxRestore},nil,0,false,true,"","(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer) and !A3A_removeRestore", 4];
 vehicleBox addAction [localize "STR_A3A_fn_init_initclient_addact_arsenal", JN_fnc_arsenal_handleAction, [], 0, true, false, "", "alive _target && vehicle _this != _this && _this == _this getVariable ['owner',objNull]", 10];
-[vehicleBox] call HR_GRG_fnc_initGarage;
+[(["vehicleBox"] call A3A_fnc_copf)] call HR_GRG_fnc_initGarage;
 
-vehicleBox addAction [localize "STR_A3A_fn_init_initclient_addact_buyveh", {
+(["vehicleBox"] call A3A_fnc_copf) addAction [localize "STR_A3A_fn_init_initclient_addact_buyveh", {
     if ([getPosATL player] call A3A_fnc_enemyNearCheck) then {
         [localize "STR_A3A_fn_init_initclient_buyveh", localize "STR_A3A_fn_init_initclient_buyveh_enemy"] call A3A_fnc_customHint;
     } else {
         createDialog "A3A_BuyVehicleDialog";
     }
-},nil,0,false,true,"","(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)", 4];
+},nil,0,false,true,"","(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) in [teamplayer,Invaders])", 4];
 
 fireX allowDamage false;
 [fireX, "fireX"] call A3A_fnc_flagaction;

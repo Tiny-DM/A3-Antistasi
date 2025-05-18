@@ -37,7 +37,7 @@ HR_GRG_previewVeh = _class createVehicleLocal [0,0,100000];
 HR_GRG_previewVeh enableSimulation false;
 
 //get vehicle data
-private _cat = HR_GRG_Vehicles#_catIndex;
+private _cat = (["HR_GRG_Vehicles"] call A3A_fnc_copf)#_catIndex;
 private _veh = _cat get _vehUID;
 Trace_1("ReloadPreview - Veh: %1", _veh);
 

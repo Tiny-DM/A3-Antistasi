@@ -30,14 +30,13 @@ private _exit = { [true] remoteExecCall ["HR_GRG_fnc_toggleConfirmBttn", _client
 if (!isServer) exitWith _exit;
 if (_UID isEqualTo "") exitWith _exit;
 if (-1 in [_catIndex, _vehUID]) exitWith _exit;
-
-private _cat = HR_GRG_Vehicles#_catIndex;
+private _cat = (["HR_GRG_Vehicles",_player] call A3A_fnc_copf)#_catIndex;
 private _vehicle = _cat get _vehUID;
 
 if !( ((_vehicle#2) in ["", _UID]) || (_player call HR_GRG_canOverrideLock) ) exitWith _exit;
 if !((_vehicle#3) in ["", _UID] ) exitWith _exit;
 
-[_UID] call HR_GRG_fnc_releaseAllVehicles;
+[_UID,_player] call HR_GRG_fnc_releaseAllVehicles;
 _vehicle set [3, _UID];
 
 Trace_3("Vehicle at | Cat: %1 | Vehicle ID: %2 | checked out by UID: %3", _catIndex, _vehUID, _UID);

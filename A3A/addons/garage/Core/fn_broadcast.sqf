@@ -24,8 +24,9 @@
     License: APL-ND
 */
 if !(isServer) exitWith {false};
+params [["_lockUID",""],["_checkoutUID",""],["_catIndex",0],["_vehUID",0],["_player",""],["_doSwitch",false]];
 HR_GRG_Event = _this;
 {
     _x publicVariableClient "HR_GRG_Event";
-} forEach HR_GRG_Users;
+} forEach (["HR_GRG_Users",_player] call A3A_fnc_copf);
 true

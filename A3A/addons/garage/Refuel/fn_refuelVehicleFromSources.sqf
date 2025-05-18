@@ -1,7 +1,7 @@
 #include "defines.inc"
 FIX_LINE_NUMBERS()
 
-params [["_vehicle", objNull, [objNull]]];
+params [["_vehicle", objNull, [objNull]],["_player",""]];
 if (isNull _vehicle) exitWith {false};
 if (!isServer) exitWith {false};
 
@@ -36,12 +36,13 @@ if (_missingFuel == 0) exitWith {true};
 private _neededCapacity = _missingFuel * _maxFuel; //convert from precentage to liters
 private _sourceEmptied = false;
 private _stateChanges = [];
-while {count (HR_GRG_Sources#1) > 0} do {
+private _reqSources = (["HR_GRG_Sources",_player] call A3A_fnc_copf);
+while {count (_reqSources#1) > 0} do {
     if (_neededCapacity == 0) exitWith {};
     Trace_1("Needed capacity: %1", _neededCapacity);
 
-    private _sourceUID = HR_GRG_Sources#1#0;
-    private _sourceData = (HR_GRG_Vehicles#HR_GRG_SOURCEINDEX) get _sourceUID;
+    private _sourceUID = _reqSources#1#0;
+    private _sourceData = ((["HR_GRG_Vehicles",_player] call A3A_fnc_copf)#HR_GRG_SOURCEINDEX) get _sourceUID;
     if (isNil "_sourceData") exitWith {
         // Shouldn't happen, but don't 10,000-cycle loop if it does
         Error_1("Fuel source vehicle %1 not found in source category", _sourceUID);
@@ -59,7 +60,11 @@ while {count (HR_GRG_Sources#1) > 0} do {
     if (_fuelCargo < _neededCapacity) then {
         _neededCapacity = _neededCapacity - _fuelCargo;
         _fuelData set [if (A3A_hasAce) then {2} else {1}, 0];
-        (HR_GRG_Sources#1) deleteAt ((HR_GRG_Sources#1) find _sourceUID);
+        if ([_player] call A3A_fnc_isOpf == Invaders) then {
+            (HR_GRG_Sources_OPF#1) deleteAt ((HR_GRG_Sources_OPF#1) find _sourceUID);
+        } else {
+            (HR_GRG_Sources#1) deleteAt ((HR_GRG_Sources#1) find _sourceUID);
+        };
         _sourceEmptied = true;
     } else {
         if (A3A_hasAce) then {
@@ -73,8 +78,8 @@ while {count (HR_GRG_Sources#1) > 0} do {
 };
 
 //broadcast source vehicle changes to clinets
-{ _x call HR_GRG_fnc_broadcastStateUpdate; } forEach _stateChanges;
-if (_sourceEmptied) then { [1] call HR_GRG_fnc_declairSources; };
+{ [_x,_player] call HR_GRG_fnc_broadcastStateUpdate; } forEach _stateChanges;
+if (_sourceEmptied) then { [1,_player] call HR_GRG_fnc_declairSources; };
 
 [
     _vehicle, 1 - (_neededCapacity / _maxFuel)/*convert needed fuel to precentage so fuel can be applied*/

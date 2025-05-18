@@ -34,12 +34,12 @@ Trace_2("Attempting to sell vehicle at cat: %1 | Vehicle ID: %2 | Classname: %3"
 private _refund = [_class] call HR_GRG_getVehicleSellPrice;
 if (_refund == 0) exitWith {["STR_HR_GRG_Feedback_sellVehicle_noPrice"] remoteExecCall ["HR_GRG_fnc_hint", _player];};
 
-private _cat = HR_GRG_Vehicles#_catIndex;
+private _cat = (["HR_GRG_Vehicles",_player] call A3A_fnc_copf)#_catIndex;
 private _veh = _cat get _vehUID;
 private _lock = _veh#2;
 if !(_lock isEqualTo "") exitWith {["STR_HR_GRG_Feedback_sellVehicle_locked"] remoteExecCall ["HR_GRG_fnc_hint", _player];};
 
-private _recipients = +HR_GRG_Users;
+private _recipients = +(["HR_GRG_Users",_player] call A3A_fnc_copf);
 _recipients pushBackUnique 2; // to avoid double-calling the function on localhost
 private _removeStatics = (_catIndex != HR_GRG_STATICINDEX);
 [_UID,_player,_removeStatics] remoteExecCall ["HR_GRG_fnc_removeFromPool", _recipients];
