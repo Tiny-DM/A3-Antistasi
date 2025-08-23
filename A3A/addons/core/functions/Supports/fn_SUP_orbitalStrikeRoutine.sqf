@@ -130,5 +130,5 @@ private _citiesInRange = (citiesX - destroyedSites) select {((getMarkerPos _x) d
     sleep 10;
 } forEach _citiesInRange;
 
-if (_citiesInRange isNotEqualTo []) then {[] spawn A3A_fnc_checkCampaignEnd;}; // If a town is destroyed, check for loss
+if (_citiesInRange isNotEqualTo []) then {["orbital"] spawn A3A_fnc_checkCampaignEnd;}; // If a town is destroyed, check for loss
 

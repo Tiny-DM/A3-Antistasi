@@ -366,5 +366,6 @@ savingServer = false;           // enable saving
     };
 };
 
+["start"] spawn A3A_fnc_checkCampaignEnd; // If exit during event, check for win/loss
 
 Info("initServer completed");

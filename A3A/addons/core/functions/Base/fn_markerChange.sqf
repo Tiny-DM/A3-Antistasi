@@ -60,6 +60,8 @@ garrison setVariable [format ["%1_requested", _markerX], [], true];
 //garrison setVariable [format ["%1_available", _markerX], [], true];
 //New system end ===============================================================
 
+private _game
+
 if (_winner == teamPlayer) then
 {
 	// Old garrison surrender
@@ -151,7 +153,7 @@ if (_markerX in airportsX) then
 			_prestigeOccupants = [-25, 90];
 			_prestigeInvaders = [50, 150];
 		};
-		[] spawn A3A_fnc_checkCampaignEnd; // If an airport is taken by rebels, check for victory
+		["flip", [_markerX,_loser]] spawn A3A_fnc_checkCampaignEnd; // If an airport is taken by rebels, check for victory
 	}
 	else
 	{

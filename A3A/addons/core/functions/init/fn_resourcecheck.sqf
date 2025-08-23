@@ -79,7 +79,7 @@ while {true} do
 			[] call A3A_fnc_tierCheck;
 		};
 	} forEach citiesX;
-	[] spawn A3A_fnc_checkCampaignEnd; // check for population win
+	["tick"] spawn A3A_fnc_checkCampaignEnd; // check for population win
 	{
 		if ((sidesX getVariable [_x,sideUnknown] == teamPlayer) and !(_x in destroyedSites)) then
 		{

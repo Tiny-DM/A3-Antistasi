@@ -8,7 +8,9 @@ Author: [Tiny]
         SUP_orbitalStrikeRoutine (in the edge case a town gets destroyed by the funny laser)
         resourceCheck (if either previous check messes up, or in the edge case that 50% support is achieved after all airbases)
 
-Arguments: None
+Arguments: 
+    _checkReason <STR>: Reason for the campaign end check. One of ["tick","punish","orbital","flip","start"]
+    _detail <STR>: Special event details. For "flip" it's an array of [marker,loser]
 
 Enviromemnt: Scheduled
 
@@ -21,6 +23,8 @@ Example:
 */
 #include "..\..\script_component.hpp"
 FIX_LINE_NUMBERS()
+
+params [["_checkReason", "start"], ["_detail",""]];
 
 private _popReb = 0;
 private _popGov = 0;
@@ -44,11 +48,18 @@ Info(_popReport);
 
 sleep 5; //This lets players have a few seconds after an event before the win/loss screen shows
 
-if (_popKilled > (_popTotal / 3)) then {
+if (_popKilled > (_popTotal / 3)) exitWith {
     isNil { ["ended", true] call A3A_fnc_writebackSaveVar };
     ["destroyedSites",false,true] remoteExec ["BIS_fnc_endMission"];
+    false;
 };
-if ((_popReb > _popGov) and ({sidesX getVariable [_x,sideUnknown] == teamPlayer} count airportsX == count airportsX)) then {
+if ((_popReb > _popGov) and ({sidesX getVariable [_x,sideUnknown] == teamPlayer} count airportsX == count airportsX)) exitWith {
     isNil { ["ended", true] call A3A_fnc_writebackSaveVar };
-    ["end1",true,true,true,true] remoteExec ["BIS_fnc_endMission",0];
+    if (_checkReason == "flip") then {
+        _detail spawn A3A_fnc_finalStand;
+        true;
+    } else {
+        ["end1",true,true,true,true] remoteExec ["BIS_fnc_endMission",0];
+    };
+    true;
 };
