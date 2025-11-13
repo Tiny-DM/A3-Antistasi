@@ -2,6 +2,7 @@ class mapInfo {
     #include "Antistasi_Altis.Altis\mapInfo.hpp"
     #include "Antistasi_cam_lao_nam.cam_lao_nam\mapInfo.hpp"
     #include "Antistasi_chernarus.chernarus\mapInfo.hpp"
+    #include "Antistasi_chernarusredux.chernarusredux\mapInfo.hpp"
     #include "Antistasi_chernarus_summer.chernarus_summer\mapInfo.hpp"
     #include "Antistasi_chernarus_winter.chernarus_winter\mapInfo.hpp"
     #include "Antistasi_cup_chernarus_A3.cup_chernarus_A3\mapInfo.hpp"

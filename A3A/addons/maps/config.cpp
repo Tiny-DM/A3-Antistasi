@@ -30,6 +30,7 @@ class CfgMissions
         A3A_Mission(Altis)
         A3A_Mission(cam_lao_nam)
         A3A_Mission(chernarus)
+        A3A_Mission(chernarusredux)
         A3A_Mission(chernarus_summer)
         A3A_Mission(chernarus_winter)
         A3A_Mission(cup_chernarus_A3)
