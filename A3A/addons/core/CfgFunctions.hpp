@@ -107,6 +107,14 @@ class CfgFunctions
             class vehicleSort {};
         };
 
+        class APS {
+            file = QPATHTOFOLDER(functions\APS);
+            class giveVehicleAPS {};
+            class incomingVisual {};
+            class initPlayerAPS {};
+            class laserWarningVisual {};
+        };
+
         class Base {
             file = QPATHTOFOLDER(functions\Base);
             class actionGarrisonVehicle {};
